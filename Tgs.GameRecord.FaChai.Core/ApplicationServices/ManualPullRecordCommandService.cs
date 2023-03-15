@@ -37,6 +37,8 @@ internal class ManualPullRecordCommandService : ICommandService<ManualPullRecord
             .ConfigureAwait(false)
             ?? Enumerable.Empty<GameRecordInfo>();
 
+        _logger.LogInformation("LogOn:{logOn} GameRecords:{gameRecords}", DateTime.Now.ToString("o"), gameRecords);
+
         if (!gameRecords.Any())
         {
             return;
