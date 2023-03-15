@@ -1,4 +1,4 @@
-apiVersion: v1
+﻿apiVersion: v1
 kind: ConfigMap
 metadata:
   name: configmap-{{ include "game-gamerecord-fachai.fullname" . }}
@@ -10,7 +10,7 @@ data:
     {
       "Logging": {
          "LogLevel": {
-          "Default": "Warning"
+          "Default": "Information"
           }
       },
       "GameRecord": {
