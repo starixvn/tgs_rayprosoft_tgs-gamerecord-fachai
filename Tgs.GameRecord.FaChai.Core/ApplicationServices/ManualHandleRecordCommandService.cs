@@ -101,7 +101,7 @@ internal class ManualHandleRecordCommandService : ICommandService<ManualHandleRe
                     commission: commission,
                     turnover: turnover,
                     playerWinLoss: winLoss,
-                    additionalData: JsonSerializer.Serialize(record.AdditionalData),
+                    additionalData: record.AdditionalData,
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             }
