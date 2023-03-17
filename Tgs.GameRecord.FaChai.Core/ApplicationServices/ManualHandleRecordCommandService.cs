@@ -10,19 +10,16 @@ internal class ManualHandleRecordCommandService : ICommandService<ManualHandleRe
 {
     private readonly ILogger<ManualHandleRecordCommandService> _logger;
     private readonly IUtensil _utensil;
-    private readonly IGameRoundsWorkClient _workClient;
     private readonly IGameRoundsWorkManualClient _workManualClient;
 
     public ManualHandleRecordCommandService(
         ILogger<ManualHandleRecordCommandService> logger,
         IUtensil utensil,
-        IGameRoundsWorkManualClient workManualClient,
-        IGameRoundsWorkClient workClient)
+        IGameRoundsWorkManualClient workManualClient)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _utensil = utensil ?? throw new ArgumentNullException(nameof(utensil));
         _workManualClient = workManualClient ?? throw new ArgumentNullException(nameof(workManualClient));
-        _workClient = workClient ?? throw new ArgumentNullException(nameof(workClient));
     }
 
     public async ValueTask ExecuteAsync(ManualHandleRecordCommand command, CancellationToken cancellationToken = default)
@@ -107,7 +104,7 @@ internal class ManualHandleRecordCommandService : ICommandService<ManualHandleRe
             }
             else
             {
-                await _workClient
+                await _workManualClient
                 .RoundMissing(
                     gameProviderId: gameProviderId,
                     gameProviderCode: gameProviderCode,

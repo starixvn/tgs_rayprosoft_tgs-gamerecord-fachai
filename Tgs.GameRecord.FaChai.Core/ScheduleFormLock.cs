@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
 using StackExchange.Redis;
-using Tgs.GameInterface.FaChai.Protos;
 
 namespace Tgs.GameRecord.FaChai.Core;
 
@@ -8,6 +7,7 @@ internal class ScheduleFormLock : IScheduleFormLock
 {
     private readonly IDatabase _database;
     private readonly GameRecordInfoOptions _gameRecordInfo;
+
     public ScheduleFormLock(
         IOptions<GameRecordInfoOptions> options,
         IDatabase database)
