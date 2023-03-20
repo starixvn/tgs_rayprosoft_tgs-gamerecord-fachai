@@ -57,7 +57,7 @@ internal class ScheduleHandleRecordCommandService : ICommandService<ScheduleHand
                 success = false;
             }
         }
-        var status = RoundBiddingStatus.Closed;
+        var status = RoundStatus.Closed;
 
         var externalCreatedOn = record.ExternalCreatedOn.ToDateTimeOffset();
         var externalClosedOn = record.ExternalCreatedOn.ToDateTimeOffset();
@@ -67,7 +67,7 @@ internal class ScheduleHandleRecordCommandService : ICommandService<ScheduleHand
         var commission = 0;
         var turnover = record.Bet.ToDecimal().GetValueOrDefault(0);
         var winLoss = record.WinLoss.ToDecimal().GetValueOrDefault(0);
-        var clientStatus = winLoss <= 0 ? RoundBiddingClientStatus.Loss : RoundBiddingClientStatus.Win;
+        var clientStatus = winLoss <= 0 ? RoundClientStatus.Loss : RoundClientStatus.Win;
 
         if (success)
         {
