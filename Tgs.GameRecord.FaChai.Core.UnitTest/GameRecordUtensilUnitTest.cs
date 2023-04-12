@@ -97,6 +97,7 @@ public class GameRecordUtensilUnitTest
         Assert.Equal(source.Bet.ToDecimal().GetValueOrDefault(0), actual.Turnover);
         Assert.Equal(source.WinLoss.ToDecimal().GetValueOrDefault(0), actual.WinLoss);
         Assert.Equal(source.Settle.ToDecimal().GetValueOrDefault(0), actual.Settle);
+        Assert.Equal(source.AdditionalData, actual.AdditionalData);
     }
 
     [Fact]
@@ -189,6 +190,7 @@ public class GameRecordUtensilUnitTest
         Assert.Equal(source.Bet.ToDecimal().GetValueOrDefault(0), actual.Turnover);
         Assert.Equal(source.WinLoss.ToDecimal().GetValueOrDefault(0), actual.WinLoss);
         Assert.Equal(source.Settle.ToDecimal().GetValueOrDefault(0), actual.Settle);
+        Assert.Equal(source.AdditionalData, actual.AdditionalData);
     }
 
     [Fact]
@@ -282,6 +284,7 @@ public class GameRecordUtensilUnitTest
         Assert.Equal(source.Bet.ToDecimal().GetValueOrDefault(0), actual.Turnover);
         Assert.Equal(source.WinLoss.ToDecimal().GetValueOrDefault(0), actual.WinLoss);
         Assert.Equal(source.Settle.ToDecimal().GetValueOrDefault(0), actual.Settle);
+        Assert.Equal(source.AdditionalData, actual.AdditionalData);
     }
 
     [Fact]
@@ -355,5 +358,6 @@ public class GameRecordUtensilUnitTest
         Assert.Equal(source.Bet.ToDecimal().GetValueOrDefault(0), actual.Turnover);
         Assert.Equal(source.WinLoss.ToDecimal().GetValueOrDefault(0), actual.WinLoss);
         Assert.Equal(source.Settle.ToDecimal().GetValueOrDefault(0), actual.Settle);
+        Assert.Equal(source.AdditionalData, actual.AdditionalData);
     }
 }

@@ -90,6 +90,6 @@ internal class GameRecordUtensil : IGameRecordUtensil
             Commission: commission,
             Turnover: turnover,
             WinLoss: winLoss,
-            AdditionalData: JsonSerializer.Serialize(source));
+            AdditionalData: source.AdditionalData);
     }
 }
