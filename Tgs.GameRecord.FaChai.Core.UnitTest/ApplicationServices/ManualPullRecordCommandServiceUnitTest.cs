@@ -14,6 +14,7 @@ public class ManualPullRecordCommandServiceUnitTest
     {
         var fakeLogger = NullLogger<ManualPullRecordCommandService>.Instance;
         var fakeClient = Substitute.For<IGameInterfaceFaChaiClient>();
+        var fakeGameRecordUtensil = Substitute.For<IGameRecordUtensil>();
         var fakeService = Substitute.For<ICommandService<ManualHandleRecordCommand>>();
 
         var command = new ManualPullRecordCommand(
@@ -27,6 +28,7 @@ public class ManualPullRecordCommandServiceUnitTest
         var service = new ManualPullRecordCommandService(
             fakeLogger,
             fakeClient,
+            fakeGameRecordUtensil,
             fakeService);
 
         await service

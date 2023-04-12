@@ -8,16 +8,19 @@ namespace Tgs.GameRecord.FaChai.Core.ApplicationServices;
 internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRecordCommand>
 {
     private readonly IGameInterfaceFaChaiClient _client;
+    private readonly IGameRecordUtensil _gameRecordUtensil;
     private readonly ILogger<SchedulePullRecordCommandService> _logger;
     private readonly ICommandService<ScheduleHandleRecordCommand> _service;
 
     public SchedulePullRecordCommandService(
         ILogger<SchedulePullRecordCommandService> logger,
         IGameInterfaceFaChaiClient client,
+        IGameRecordUtensil gameRecordUtensil,
         ICommandService<ScheduleHandleRecordCommand> service)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _client = client ?? throw new ArgumentNullException(nameof(client));
+        _gameRecordUtensil = gameRecordUtensil ?? throw new ArgumentNullException(nameof(gameRecordUtensil));
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
 
@@ -48,9 +51,15 @@ internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRe
         {
             try
             {
+                var record = await _gameRecordUtensil
+                    .SettlementConvertRecordAsync(
+                        gameRecord,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+
                 await _service
                     .ExecuteAsync(
-                        command: new(gameRecord),
+                        command: new(record),
                         cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             }

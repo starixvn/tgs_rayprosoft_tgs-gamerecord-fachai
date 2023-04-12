@@ -7,107 +7,63 @@ namespace Tgs.GameRecord.FaChai.Core.ApplicationServices;
 
 internal class ScheduleHandleRecordCommandService : ICommandService<ScheduleHandleRecordCommand>
 {
-    private readonly IUtensil _utensil;
-    private readonly IGameRoundsWorkClient _workClient;
+    private readonly IGameRoundsWorkClient _client;
 
     public ScheduleHandleRecordCommandService(
-        IUtensil utensil,
-        IGameRoundsWorkClient workClient)
+        IGameRoundsWorkClient client)
     {
-        _utensil = utensil ?? throw new ArgumentNullException(nameof(utensil));
-        _workClient = workClient ?? throw new ArgumentNullException(nameof(workClient));
+        _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
     public async ValueTask ExecuteAsync(ScheduleHandleRecordCommand command, CancellationToken cancellationToken = default)
     {
-        var gameProviderId = await _utensil
-            .GetGameProviderIdAsync(
-                cancellationToken)
-            .ConfigureAwait(false);
-        var gameProviderCode = _utensil
-            .GetGameProviderCode();
-        var record = command.GameRecord;
-
-        bool success = true;
-        var playerModel = await _utensil
-            .GetPlayerAsync(
-                playerCode: record.PlayerCode,
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-        var gameId = await _utensil
-            .GetGameIdAsync(
-                gameProviderId: gameProviderId,
-                gameExternalId: record.ExternalGameId,
-                cancellationToken: cancellationToken).ConfigureAwait(false);
-        if (playerModel == null || !gameId.HasValue)
+        if (command.Record.Success)
         {
-            success = false;
-        }
-
-        Guid? gameProviderConfigurationId = default;
-        if (playerModel != null)
-        {
-            gameProviderConfigurationId = await _utensil
-                .GetBrandGameProviderConfigurationIdAsync(
-                    brandId: playerModel.BrandId,
-                    gameProviderId: gameProviderId,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
-            if (!gameProviderConfigurationId.HasValue)
+            var status = RoundStatus.Open;
+            var clientStatus = RoundClientStatus.Open;
+            if (command.Record.Closed)
             {
-                success = false;
+                status = RoundStatus.Closed;
+                clientStatus = command.Record.WinLoss <= 0 ? RoundClientStatus.Loss : RoundClientStatus.Win;
             }
-        }
-        var status = RoundStatus.Closed;
 
-        var externalCreatedOn = record.ExternalCreatedOn.ToDateTimeOffset();
-        var externalClosedOn = record.ExternalCreatedOn.ToDateTimeOffset();
-        var bet = record.Bet.ToDecimal().GetValueOrDefault(0);
-        var validBet = record.Bet.ToDecimal().GetValueOrDefault(0);
-        var settle = record.Settle.ToDecimal().GetValueOrDefault(0);
-        var commission = 0;
-        var turnover = record.Bet.ToDecimal().GetValueOrDefault(0);
-        var winLoss = record.WinLoss.ToDecimal().GetValueOrDefault(0);
-        var clientStatus = winLoss <= 0 ? RoundClientStatus.Loss : RoundClientStatus.Win;
-
-        if (success)
-        {
-            await _workClient
+            await _client
             .RoundBidding(
-                gameProviderId: gameProviderId,
-                gameProviderCode: gameProviderCode,
-                externalRoundId: record.ExternalRoundId,
-                gameId: gameId!.Value,
-                externalGameId: record.ExternalGameId,
-                playerCode: playerModel!.PlayerCode,
-                walletId: playerModel!.DefaultWalletId,
-                currencyCode: playerModel!.DefaultWalletCurrencyCode,
-                brandId: playerModel!.BrandId,
-                gameProviderConfigurationId: gameProviderConfigurationId!.Value,
+                gameProviderId: command.Record.GameProviderId,
+                gameProviderCode: command.Record.GameProviderCode,
+                externalRoundId: command.Record.ExternalRoundId,
+                gameId: command.Record.GameId,
+                externalGameId: command.Record.ExternalGameId,
+                playerCode: command.Record.PlayerCode,
+                walletId: command.Record.WalletId,
+                currencyCode: command.Record.CurrencyCode,
+                brandId: command.Record.BrandId,
+                gameProviderConfigurationId: command.Record.GameProviderConfigurationId,
                 status: status,
                 clientStatus: clientStatus,
-                externalCreatedOn: externalCreatedOn,
-                externalClosedOn: externalClosedOn,
-                bet: bet,
-                validBet: validBet,
-                settle: settle,
-                commission: commission,
-                turnover: turnover,
-                playerWinLoss: winLoss,
-                additionalData: record.AdditionalData,
+                externalCreatedOn: command.Record.ExternalCreatedOn,
+                externalClosedOn: command.Record.ExternalClosedOn,
+                bet: command.Record.Bet,
+                validBet: command.Record.ValidBet,
+                settle: command.Record.Settle,
+                commission: command.Record.Commission,
+                turnover: command.Record.Turnover,
+                playerWinLoss: command.Record.WinLoss,
+                additionalData: command.Record.AdditionalData,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         }
         else
         {
-            await _workClient
+            await _client
             .RoundMissing(
-                gameProviderId: gameProviderId,
-                gameProviderCode: gameProviderCode,
-                externalRoundId: record.ExternalRoundId,
-                gameId: gameId ?? -1,
-                externalGameId: record.ExternalGameId,
-                playerCode: playerModel?.PlayerCode ?? string.Empty,
-                data: JsonSerializer.Serialize(record),
+                gameProviderId: command.Record.GameProviderId,
+                gameProviderCode: command.Record.GameProviderCode,
+                externalRoundId: command.Record.ExternalRoundId,
+                gameId: command.Record.GameId,
+                externalGameId: command.Record.ExternalGameId,
+                playerCode: command.Record.PlayerCode,
+                data: JsonSerializer.Serialize(command.Record),
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         }

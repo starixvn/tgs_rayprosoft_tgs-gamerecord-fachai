@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Tgs.GameRecord.FaChai.Attributes;
 
 namespace Tgs.GameRecord.FaChai.ViewModels;
 
@@ -18,6 +17,5 @@ public record FaChaiViewModel
     public DateTime StartTime { get; init; }
     [Required]
     [DataType(DataType.DateTime)]
-    [DateTimeRangeMinutes("StartTime", 15)]
     public DateTime EndTime { get; init; }
 }

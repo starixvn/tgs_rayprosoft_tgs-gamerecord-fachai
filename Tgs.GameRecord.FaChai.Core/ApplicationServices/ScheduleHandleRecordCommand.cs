@@ -1,5 +1,5 @@
-﻿using Tgs.GameInterface.FaChai.Protos;
+﻿using Tgs.GameRecord.FaChai.Core.Models;
 
 namespace Tgs.GameRecord.FaChai.Core.ApplicationServices;
 
-public record ScheduleHandleRecordCommand(GameRecordInfo GameRecord);
+public record ScheduleHandleRecordCommand(RecordInfo Record);
