@@ -40,7 +40,7 @@ internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRe
             .ConfigureAwait(false)
             ?? Enumerable.Empty<GameRecordInfo>();
 
-        _logger.LogInformation("LogOn:{logOn} GameRecords:{gameRecords}", DateTime.Now.ToString("o"), gameRecords);
+        _logger.LogDebug("LogOn:{logOn} Message: Settlement. GameRecords:{gameRecords}", DateTime.Now.ToString("o"), gameRecords);
 
         if (!gameRecords.Any())
         {
@@ -49,6 +49,8 @@ internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRe
 
         foreach (var gameRecord in gameRecords)
         {
+            _logger.LogDebug("LogOn:{logOn} Message: Settlement. GameRecords:{gameRecord}", DateTime.Now.ToString("o"), gameRecord);
+
             try
             {
                 var record = await _gameRecordUtensil
@@ -56,6 +58,8 @@ internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRe
                         gameRecord,
                         cancellationToken)
                     .ConfigureAwait(false);
+
+                _logger.LogDebug("LogOn:{logOn} Message: Settlement. Record:{record}", DateTime.Now.ToString("o"), record);
 
                 await _service
                     .ExecuteAsync(
@@ -65,7 +69,7 @@ internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRe
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "遊戲紀錄處理發生例外.({gameRecord})", gameRecord);
+                _logger.LogError(ex, "LogOn:{logOn} Message: Settlement Exception. GameRecord:{gameRecord}", DateTime.Now.ToString("o"), gameRecord);
             }
         }
     }

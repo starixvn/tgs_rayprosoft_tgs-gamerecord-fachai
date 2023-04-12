@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Tgs.GameInterface.FaChai.Protos;
+﻿using Tgs.GameInterface.FaChai.Protos;
 using Tgs.GameRecord.FaChai.Core.Models;
 
 namespace Tgs.GameRecord.FaChai.Core;
