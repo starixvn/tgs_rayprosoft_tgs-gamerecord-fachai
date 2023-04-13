@@ -11,65 +11,120 @@ internal class ManualPullRecordCommandService : ICommandService<ManualPullRecord
     private readonly IGameRecordUtensil _gameRecordUtensil;
     private readonly ILogger<ManualPullRecordCommandService> _logger;
     private readonly ICommandService<ManualHandleRecordCommand> _service;
+    private readonly IUtensil _utensil;
 
     public ManualPullRecordCommandService(
         ILogger<ManualPullRecordCommandService> logger,
         IGameInterfaceFaChaiClient client,
+        IUtensil utensil,
         IGameRecordUtensil gameRecordUtensil,
         ICommandService<ManualHandleRecordCommand> service)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _client = client ?? throw new ArgumentNullException(nameof(client));
+        _utensil = utensil ?? throw new ArgumentNullException(nameof(utensil));
         _gameRecordUtensil = gameRecordUtensil ?? throw new ArgumentNullException(nameof(gameRecordUtensil));
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
 
     public async ValueTask ExecuteAsync(ManualPullRecordCommand command, CancellationToken cancellationToken = default)
     {
-        var gameRecords = await _client
-            .GameRecordHistoryAsync(
-                apiUrl: command.ApiUrl,
-                agentCode: command.AgentCode,
-                agentKey: command.AgentKey,
-                currency: command.Currency,
-                startDate: command.StartDate,
-                endDate: command.EndDate,
-                cancellationToken: cancellationToken)
-            .ToArrayAsync(
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false)
-            ?? Enumerable.Empty<GameRecordInfo>();
-
-        _logger.LogDebug("LogOn:{logOn} Message: Settlement. GameRecords:{gameRecords}", DateTime.Now.ToString("o"), gameRecords);
-
-        if (!gameRecords.Any())
+        if (_utensil.TimeDifferenceWithin2Hours(command.EndDate))
         {
-            return;
-        }
+            var gameRecords = await _client
+                .GameRecordAsync(
+                    apiUrl: command.ApiUrl,
+                    agentCode: command.AgentCode,
+                    agentKey: command.AgentKey,
+                    currency: command.Currency,
+                    startDate: command.StartDate,
+                    endDate: command.EndDate,
+                    cancellationToken: cancellationToken)
+                .ToArrayAsync(
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false)
+                ?? Enumerable.Empty<GameRecordInfo>();
 
-        foreach (var gameRecord in gameRecords)
-        {
-            _logger.LogDebug("LogOn:{logOn} Message: Settlement. GameRecords:{gameRecord}", DateTime.Now.ToString("o"), gameRecord);
+            _logger.LogDebug("LogOn:{logOn} Message: GameRecord Settlement. GameRecords:{gameRecords}", DateTime.Now.ToString("o"), gameRecords);
 
-            try
+            if (!gameRecords.Any())
             {
-                var record = await _gameRecordUtensil
-                    .SettlementConvertRecordAsync(
-                        gameRecord,
-                        cancellationToken)
-                    .ConfigureAwait(false);
-
-                _logger.LogDebug("LogOn:{logOn} Message: Settlement. Record:{record}", DateTime.Now.ToString("o"), record);
-
-                await _service
-                    .ExecuteAsync(
-                        command: new(record),
-                        cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
+                return;
             }
-            catch (Exception ex)
+
+            foreach (var gameRecord in gameRecords)
             {
-                _logger.LogError(ex, "LogOn:{logOn} Message: Settlement Exception. GameRecord:{gameRecord}", DateTime.Now.ToString("o"), gameRecord);
+                _logger.LogDebug("LogOn:{logOn} Message: GameRecord Settlement. GameRecords:{gameRecord}", DateTime.Now.ToString("o"), gameRecord);
+
+                try
+                {
+                    var record = await _gameRecordUtensil
+                        .SettlementConvertRecordAsync(
+                            gameRecord,
+                            cancellationToken)
+                        .ConfigureAwait(false);
+
+                    _logger.LogDebug("LogOn:{logOn} Message: GameRecord Settlement. Record:{record}", DateTime.Now.ToString("o"), record);
+
+                    await _service
+                        .ExecuteAsync(
+                            command: new(record),
+                            cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "LogOn:{logOn} Message: GameRecord Settlement Exception. GameRecord:{gameRecord}", DateTime.Now.ToString("o"), gameRecord);
+                }
+            }
+        }
+        else
+        {
+            var gameRecords = await _client
+                .GameRecordHistoryAsync(
+                    apiUrl: command.ApiUrl,
+                    agentCode: command.AgentCode,
+                    agentKey: command.AgentKey,
+                    currency: command.Currency,
+                    startDate: command.StartDate,
+                    endDate: command.EndDate,
+                    cancellationToken: cancellationToken)
+                .ToArrayAsync(
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false)
+                ?? Enumerable.Empty<GameRecordInfo>();
+
+            _logger.LogDebug("LogOn:{logOn} Message: GameRecordHistory Settlement. GameRecords:{gameRecords}", DateTime.Now.ToString("o"), gameRecords);
+
+            if (!gameRecords.Any())
+            {
+                return;
+            }
+
+            foreach (var gameRecord in gameRecords)
+            {
+                _logger.LogDebug("LogOn:{logOn} Message: GameRecordHistory Settlement. GameRecords:{gameRecord}", DateTime.Now.ToString("o"), gameRecord);
+
+                try
+                {
+                    var record = await _gameRecordUtensil
+                        .SettlementConvertRecordAsync(
+                            gameRecord,
+                            cancellationToken)
+                        .ConfigureAwait(false);
+
+                    _logger.LogDebug("LogOn:{logOn} Message: GameRecordHistory Settlement. Record:{record}", DateTime.Now.ToString("o"), record);
+
+                    await _service
+                        .ExecuteAsync(
+                            command: new(record),
+                            cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "LogOn:{logOn} Message: GameRecordHistory Settlement Exception. GameRecord:{gameRecord}", DateTime.Now.ToString("o"), gameRecord);
+                }
             }
         }
     }
