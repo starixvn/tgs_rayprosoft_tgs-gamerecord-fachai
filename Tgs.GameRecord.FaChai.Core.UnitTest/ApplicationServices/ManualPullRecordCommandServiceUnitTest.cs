@@ -16,7 +16,7 @@ public class ManualPullRecordCommandServiceUnitTest
         var fakeClient = Substitute.For<IGameInterfaceFaChaiClient>();
         var fakeUtensil = Substitute.For<IUtensil>();
         var fakeGameRecordUtensil = Substitute.For<IGameRecordUtensil>();
-        var fakeService = Substitute.For<ICommandService<ManualHandleRecordCommand>>();
+        var fakeService = Substitute.For<ICommandService<HandleRecordCommand>>();
 
         var command = new ManualPullRecordCommand(
             ApiUrl: new("http://localhost/"),
@@ -79,7 +79,7 @@ public class ManualPullRecordCommandServiceUnitTest
         var fakeClient = Substitute.For<IGameInterfaceFaChaiClient>();
         var fakeUtensil = Substitute.For<IUtensil>();
         var fakeGameRecordUtensil = Substitute.For<IGameRecordUtensil>();
-        var fakeService = Substitute.For<ICommandService<ManualHandleRecordCommand>>();
+        var fakeService = Substitute.For<ICommandService<HandleRecordCommand>>();
 
         var command = new ManualPullRecordCommand(
             ApiUrl: new("http://localhost/"),

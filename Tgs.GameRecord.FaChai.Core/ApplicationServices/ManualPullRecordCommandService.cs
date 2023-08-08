@@ -10,7 +10,7 @@ internal class ManualPullRecordCommandService : ICommandService<ManualPullRecord
     private readonly IGameInterfaceFaChaiClient _client;
     private readonly IGameRecordUtensil _gameRecordUtensil;
     private readonly ILogger<ManualPullRecordCommandService> _logger;
-    private readonly ICommandService<ManualHandleRecordCommand> _service;
+    private readonly ICommandService<HandleRecordCommand> _service;
     private readonly IUtensil _utensil;
 
     public ManualPullRecordCommandService(
@@ -18,7 +18,7 @@ internal class ManualPullRecordCommandService : ICommandService<ManualPullRecord
         IGameInterfaceFaChaiClient client,
         IUtensil utensil,
         IGameRecordUtensil gameRecordUtensil,
-        ICommandService<ManualHandleRecordCommand> service)
+        ICommandService<HandleRecordCommand> service)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _client = client ?? throw new ArgumentNullException(nameof(client));

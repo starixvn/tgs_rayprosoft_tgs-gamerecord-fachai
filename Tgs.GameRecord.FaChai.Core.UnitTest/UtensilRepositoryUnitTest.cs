@@ -52,7 +52,6 @@ public class UtensilRepositoryUnitTest
                 gameProviderId)
             .ConfigureAwait(false);
 
-        Assert.NotNull(actual);
         Assert.True(actual.HasValue);
         Assert.Equal(gameProviderConfigurationId, actual.Value);
 
@@ -107,7 +106,6 @@ public class UtensilRepositoryUnitTest
                 gameExternalId)
             .ConfigureAwait(false);
 
-        Assert.NotNull(actual);
         Assert.True(actual.HasValue);
         Assert.Equal(gameId, actual.Value);
 
