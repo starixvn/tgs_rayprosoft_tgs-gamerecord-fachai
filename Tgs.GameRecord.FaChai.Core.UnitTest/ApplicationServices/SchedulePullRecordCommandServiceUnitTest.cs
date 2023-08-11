@@ -14,7 +14,6 @@ public class SchedulePullRecordCommandServiceUnitTest
     {
         var fakeLogger = NullLogger<SchedulePullRecordCommandService>.Instance;
         var fakeClient = Substitute.For<IGameInterfaceFaChaiClient>();
-        var fakeGameRecordUtensil = Substitute.For<IGameRecordUtensil>();
         var fakeService = Substitute.For<ICommandService<HandleRecordCommand>>();
 
         var command = new SchedulePullRecordCommand(
@@ -28,7 +27,6 @@ public class SchedulePullRecordCommandServiceUnitTest
         var service = new SchedulePullRecordCommandService(
             fakeLogger,
             fakeClient,
-            fakeGameRecordUtensil,
             fakeService);
 
         await service

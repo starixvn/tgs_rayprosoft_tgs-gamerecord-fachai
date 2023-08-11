@@ -34,6 +34,5 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IScheduleFormDispatcher, ScheduleFormDispatcher>()
             .AddSingleton<IScheduleFormLock>(sp => ActivatorUtilities.CreateInstance<ScheduleFormLock>(sp, sp.GetRequiredService<RedisConnectionManager>().Database))
             .AddTransient<IUtensil>(sp => ActivatorUtilities.CreateInstance<UtensilRepository>(sp, TimeSpan.FromHours(1)))
-            .AddSingleton<IGameRecordUtensil, GameRecordUtensil>()
             .AddSingleton<ISystemClock, SystemClock>();
 }

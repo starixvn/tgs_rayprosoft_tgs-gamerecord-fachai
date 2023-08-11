@@ -15,7 +15,6 @@ public class ManualPullRecordCommandServiceUnitTest
         var fakeLogger = NullLogger<ManualPullRecordCommandService>.Instance;
         var fakeClient = Substitute.For<IGameInterfaceFaChaiClient>();
         var fakeUtensil = Substitute.For<IUtensil>();
-        var fakeGameRecordUtensil = Substitute.For<IGameRecordUtensil>();
         var fakeService = Substitute.For<ICommandService<HandleRecordCommand>>();
 
         var command = new ManualPullRecordCommand(
@@ -35,7 +34,6 @@ public class ManualPullRecordCommandServiceUnitTest
             fakeLogger,
             fakeClient,
             fakeUtensil,
-            fakeGameRecordUtensil,
             fakeService);
 
         await service
@@ -78,7 +76,6 @@ public class ManualPullRecordCommandServiceUnitTest
         var fakeLogger = NullLogger<ManualPullRecordCommandService>.Instance;
         var fakeClient = Substitute.For<IGameInterfaceFaChaiClient>();
         var fakeUtensil = Substitute.For<IUtensil>();
-        var fakeGameRecordUtensil = Substitute.For<IGameRecordUtensil>();
         var fakeService = Substitute.For<ICommandService<HandleRecordCommand>>();
 
         var command = new ManualPullRecordCommand(
@@ -98,7 +95,6 @@ public class ManualPullRecordCommandServiceUnitTest
             fakeLogger,
             fakeClient,
             fakeUtensil,
-            fakeGameRecordUtensil,
             fakeService);
 
         await service
