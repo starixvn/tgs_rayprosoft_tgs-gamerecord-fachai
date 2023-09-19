@@ -29,10 +29,7 @@ public class SchedulePullRecordCommandServiceUnitTest
             fakeClient,
             fakeService);
 
-        await service
-            .ExecuteAsync(
-                command: command)
-            .ConfigureAwait(false);
+        await service.ExecuteAsync(command: command);
 
         _ = await fakeClient
             .Received(1)
@@ -45,7 +42,6 @@ public class SchedulePullRecordCommandServiceUnitTest
                 endDate: Arg.Is(command.EndDate),
                 cancellationToken: Arg.Any<CancellationToken>())
             .ToArrayAsync(
-                cancellationToken: Arg.Any<CancellationToken>())
-            .ConfigureAwait(false);
+                cancellationToken: Arg.Any<CancellationToken>());
     }
 }

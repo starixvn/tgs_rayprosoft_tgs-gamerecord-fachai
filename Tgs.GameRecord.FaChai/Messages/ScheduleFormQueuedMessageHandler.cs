@@ -1,6 +1,6 @@
 ﻿using Tgs.GameRecord.FaChai.Core;
 using Tgs.GameRounds.Schedule.Common.Protos;
-using Tgs.MessageQueue;
+using Valhalla.MessageQueue;
 
 namespace Tgs.GameRecord.FaChai.Messages;
 
