@@ -94,9 +94,9 @@ internal class JobInitCommandService : ICommandService<JobInitCommand>
                 }
 
                 var jobExecuteCommand = new JobExecuteCommand(
+                    GameProviderCode: gameProviderConfig.GameProviderCode,
                     Name: gameProviderConfig.Name,
                     ApiUrl: apiUrl,
-                    GameProviderCode: gameProviderConfig.GameProviderCode,
                     AgentCode: agentCode,
                     AgentKey: agentKey,
                     Currency: currency);

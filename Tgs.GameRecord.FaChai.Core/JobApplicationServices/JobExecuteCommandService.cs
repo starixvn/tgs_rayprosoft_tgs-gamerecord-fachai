@@ -21,7 +21,6 @@ internal class JobExecuteCommandService : ICommandService<JobExecuteCommand>
         _gameRecordInfo = options.Value;
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _client = client ?? throw new ArgumentNullException(nameof(client));
-
         _intervalMinutes = _gameRecordInfo.IntervalMinutesMax < _gameRecordInfo.IntervalMinutes
             ? _gameRecordInfo.IntervalMinutesMax
             : _gameRecordInfo.IntervalMinutesMinimum > _gameRecordInfo.IntervalMinutes

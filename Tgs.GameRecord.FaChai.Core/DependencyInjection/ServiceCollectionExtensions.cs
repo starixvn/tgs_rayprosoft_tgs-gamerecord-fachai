@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Tgs.GameCommand.Client;
 using Tgs.GameInterface.FaChai.Client;
-using Tgs.GameRecord.FaChai.Core;
 using Tgs.GameRounds.Schedule.Client;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Tgs.GameRecord.FaChai.Core.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
