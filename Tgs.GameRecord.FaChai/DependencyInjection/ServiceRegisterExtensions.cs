@@ -1,7 +1,7 @@
 ﻿using Tgs.GameInterface.FaChai.Client;
 using Tgs.GameRecord.FaChai.Core;
 
-namespace Tgs.GameRecord.FaChai.DependencyInjection;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceRegisterExtensions
 {

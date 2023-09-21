@@ -10,8 +10,6 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Tgs.GameRecord.FaChai;
 using Tgs.GameRecord.FaChai.Core;
-using Tgs.GameRecord.FaChai.Core.DependencyInjection;
-using Tgs.GameRecord.FaChai.DependencyInjection;
 using Tgs.GameRecord.FaChai.Messages;
 
 var builder = WebApplication.CreateBuilder(args);
