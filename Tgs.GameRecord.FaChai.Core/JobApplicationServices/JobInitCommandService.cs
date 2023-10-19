@@ -88,7 +88,7 @@ internal class JobInitCommandService : ICommandService<JobInitCommand>
                 var currency = configurationDataJson["Currency"]?.ToString()
                     ?? throw new Exception($"Required parameters(Currency)");
 
-                if (gameProviderAgentMapper.ContainsKey(gameProviderConfig.Name))
+                if (gameProviderAgentMapper.ContainsKey(agentCode))
                 {
                     continue;
                 }
@@ -101,10 +101,12 @@ internal class JobInitCommandService : ICommandService<JobInitCommand>
                     AgentKey: agentKey,
                     Currency: currency);
 
-                gameProviderAgentMapper.Add(gameProviderConfig.Name, jobExecuteCommand);
+                gameProviderAgentMapper.Add(agentCode, jobExecuteCommand);
+
+                var recurringJobId = $"{gameProviderConfig.Name}|{gameProviderConfig.GameProviderConfigId}";
 
                 RecurringJob.AddOrUpdate<IHangfireUtensil>(
-                    recurringJobId: gameProviderConfig.Name,
+                    recurringJobId: recurringJobId,
                     methodCall: service => service.JobExecuteAsync(jobExecuteCommand),
                     cronExpression: Cron.Minutely(),
                     options: _recurringJobOptions);
