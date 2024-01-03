@@ -1,21 +1,19 @@
 ﻿apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: configmap-{{ include "game-gamerecord-fachai.fullname" . }}
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "game-gamerecord-fachai.labels" . | nindent 4 }}
+  name: configmap-{{ include "game-gamerecord-fachai.name" . }}
+  namespace: {{ .Values.namespace }}
 data:
   appsettings.json: |
     {
       "Logging": {
-         "LogLevel": {
-          "Default": "Warning"
-          }
+        "LogLevel": {
+          "Default": "Warning",
+          "Tgs.GameRecord.FaChai.Messages": "Information"
+        }
       },
       "GameRecord": {
         "GameCommandClientBaseUrl": "http://game-gamecommand/",
-        "GameRoundsScheduleClientBaseUrl": "http://game-gamerounds-schedule:9090/",
         "GameInterfaceClientBaseUrl": "dns:///game-gameinterface-fachai:9090/"
       }
     }

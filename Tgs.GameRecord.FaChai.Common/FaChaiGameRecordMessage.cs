@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Tgs.GameRecord.FaChai.ViewModels;
+namespace Tgs.GameRecord.FaChai.Common;
 
-public record FaChaiViewModel
+public record FaChaiGameRecordMessage
 {
     [Required]
+    [DataType(DataType.Url)]
     public Uri ApiUrl { get; init; } = default!;
     [Required]
     public string AgentCode { get; init; } = default!;
@@ -14,8 +15,8 @@ public record FaChaiViewModel
     public string Currency { get; init; } = default!;
     [Required]
     [DataType(DataType.DateTime)]
-    public DateTime StartTime { get; init; }
+    public DateTimeOffset StartTime { get; init; }
     [Required]
     [DataType(DataType.DateTime)]
-    public DateTime EndTime { get; init; }
+    public DateTimeOffset EndTime { get; init; }
 }

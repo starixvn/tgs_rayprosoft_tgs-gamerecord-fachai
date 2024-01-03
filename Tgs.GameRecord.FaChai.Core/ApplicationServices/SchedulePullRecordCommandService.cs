@@ -5,25 +5,14 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.FaChai.Core.ApplicationServices;
 
-internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRecordCommand>
+internal class SchedulePullRecordCommandService(
+    ILogger<SchedulePullRecordCommandService> logger,
+    IGameInterfaceFaChaiClient client,
+    ICommandService<HandleRecordCommand> service) : ICommandService<SchedulePullRecordCommand>
 {
-    private readonly IGameInterfaceFaChaiClient _client;
-    private readonly ILogger<SchedulePullRecordCommandService> _logger;
-    private readonly ICommandService<HandleRecordCommand> _service;
-
-    public SchedulePullRecordCommandService(
-        ILogger<SchedulePullRecordCommandService> logger,
-        IGameInterfaceFaChaiClient client,
-        ICommandService<HandleRecordCommand> service)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-        _service = service ?? throw new ArgumentNullException(nameof(service));
-    }
-
     public async ValueTask ExecuteAsync(SchedulePullRecordCommand command, CancellationToken cancellationToken = default)
     {
-        var gameRecords = await _client
+        var gameRecords = await client
             .GameRecordAsync(
                 apiUrl: command.ApiUrl,
                 agentCode: command.AgentCode,
@@ -37,7 +26,7 @@ internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRe
             .ConfigureAwait(false)
             ?? Enumerable.Empty<GameRecordInfo>();
 
-        _logger.LogDebug("LogOn:{logOn} Message: Settlement. GameRecords:{gameRecords}", DateTime.Now.ToString("o"), gameRecords);
+        logger.LogDebug("LogOn:{logOn} Message: Settlement. GameRecords:{gameRecords}", DateTime.Now.ToString("o"), gameRecords);
 
         if (!gameRecords.Any())
         {
@@ -46,11 +35,11 @@ internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRe
 
         foreach (var gameRecord in gameRecords)
         {
-            _logger.LogDebug("LogOn:{logOn} Message: Settlement. GameRecords:{gameRecord}", DateTime.Now.ToString("o"), gameRecord);
+            logger.LogDebug("LogOn:{logOn} Message: Settlement. GameRecords:{gameRecord}", DateTime.Now.ToString("o"), gameRecord);
 
             try
             {
-                await _service
+                await service
                     .ExecuteAsync(
                     command: new(gameRecord),
                     cancellationToken: cancellationToken)
@@ -58,7 +47,7 @@ internal class SchedulePullRecordCommandService : ICommandService<SchedulePullRe
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "LogOn:{logOn} Message: game record exception.({gameRecord})", DateTime.Now.ToString("o"), gameRecord);
+                logger.LogError(ex, "LogOn:{logOn} Message: game record exception.({gameRecord})", DateTime.Now.ToString("o"), gameRecord);
             }
         }
     }

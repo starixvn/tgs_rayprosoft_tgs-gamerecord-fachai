@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Tgs.GameRecord.FaChai.Core;
-using Tgs.GameRecord.FaChai.ViewModels;
-using Tgs.GameRounds.Schedule.Client;
-using Tgs.GameRounds.Schedule.Protos;
+﻿using System.Text;
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
+using Tgs.GameRecord.FaChai.Common;
+using Valhalla.MessageQueue;
 
 namespace Tgs.GameRecord.FaChai.Controllers;
 
@@ -11,18 +10,10 @@ namespace Tgs.GameRecord.FaChai.Controllers;
 [ApiController]
 public class FaChaiController : ControllerBase
 {
-    private readonly GameRecordInfoOptions _gameRecordInfo;
-
-    public FaChaiController(
-        IOptions<GameRecordInfoOptions> options)
-    {
-        _gameRecordInfo = options.Value; ;
-    }
-
     /// <summary>
     /// Manuals the game record asynchronous.
     /// </summary>
-    /// <param name="client">The client.</param>
+    /// <param name="messageSender">The message sender.</param>
     /// <param name="source">The source.</param>
     /// <returns></returns>
     /// <remarks>
@@ -40,25 +31,17 @@ public class FaChaiController : ControllerBase
     /// </remarks>
     [HttpPost("manual")]
     public ValueTask ManualGameRecordAsync(
-        [FromServices] IGameRoundsScheduleClient client,
-        FaChaiViewModel source)
-        => client.FaChai_ScheduleFormQueuedAsync(
-             gameProviderCode: _gameRecordInfo.GameProviderCode,
-             name: source.AgentCode,
-             subject: "gp.gamerecord.scheduleform.fachai.queued",
-             source: ScheduleFormSource.Manual,
-             apiUrl: source.ApiUrl,
-             agentCode: source.AgentCode,
-             agentKey: source.AgentKey,
-             currency: source.Currency,
-             startTime: source.StartTime,
-             endTime: source.EndTime,
-             cancellationToken: HttpContext.RequestAborted);
+        [FromServices] IMessageSender messageSender,
+        FaChaiGameRecordMessage source)
+        => messageSender.PublishAsync(
+            subject: FaChaiNatsConst.ManualPublish,
+            data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(source)),
+            cancellationToken: HttpContext.RequestAborted);
 
     /// <summary>
     /// Schedules the game record asynchronous.
     /// </summary>
-    /// <param name="client">The client.</param>
+    /// <param name="messageSender">The message sender.</param>
     /// <param name="source">The source.</param>
     /// <returns></returns>
     /// <remarks>
@@ -76,18 +59,10 @@ public class FaChaiController : ControllerBase
     /// </remarks>
     [HttpPost("schedule")]
     public ValueTask ScheduleGameRecordAsync(
-        [FromServices] IGameRoundsScheduleClient client,
-        FaChaiViewModel source)
-        => client.FaChai_ScheduleFormQueuedAsync(
-             gameProviderCode: _gameRecordInfo.GameProviderCode,
-             name: source.AgentCode,
-             subject: "gp.gamerecord.scheduleform.fachai.queued",
-             source: ScheduleFormSource.Schedule,
-             apiUrl: source.ApiUrl,
-             agentCode: source.AgentCode,
-             agentKey: source.AgentKey,
-             currency: source.Currency,
-             startTime: source.StartTime,
-             endTime: source.EndTime,
-             cancellationToken: HttpContext.RequestAborted);
+        [FromServices] IMessageSender messageSender,
+        FaChaiGameRecordMessage source)
+        => messageSender.PublishAsync(
+            subject: FaChaiNatsConst.SchedulePublish,
+            data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(source)),
+            cancellationToken: HttpContext.RequestAborted);
 }
