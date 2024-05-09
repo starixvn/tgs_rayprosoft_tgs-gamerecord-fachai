@@ -18,10 +18,10 @@ public class HandleRecordCommandServiceUnitTest
 		{
 			GameProviderCode = "FACHAI",
 			GameProviderConfiguration = "FACHAIConfiguration",
-			HangfirePrefix = "fachai-schedule:hangfire:",
-			HangfireLocking = "fachai-locking:hangfire:",
-			IntervalMinutes = 10,
-			IntervalMinutesMax = 1440,
+			HangfirePrefix = "gamerecord-fachai-hangfire:",
+			HangfireLocking = "gamerecord-fachai-locking:",
+			IntervalMinutes = 3,
+			IntervalMinutesMax = 15,
 			IntervalMinutesMinimum = 1
 		});
 		var fakeMessageSender = Substitute.For<IMessageSender>();
@@ -90,10 +90,10 @@ public class HandleRecordCommandServiceUnitTest
 		{
 			GameProviderCode = "FACHAI",
 			GameProviderConfiguration = "FACHAIConfiguration",
-			HangfirePrefix = "fachai-schedule:hangfire:",
-			HangfireLocking = "fachai-locking:hangfire:",
-			IntervalMinutes = 10,
-			IntervalMinutesMax = 1440,
+			HangfirePrefix = "gamerecord-fachai-hangfire:",
+			HangfireLocking = "gamerecord-fachai-locking:",
+			IntervalMinutes = 3,
+			IntervalMinutesMax = 15,
 			IntervalMinutesMinimum = 1
 		});
 		var fakeMessageSender = Substitute.For<IMessageSender>();
