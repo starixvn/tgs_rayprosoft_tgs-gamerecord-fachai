@@ -8,20 +8,19 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddGameRecordCore(
-        this IServiceCollection services,
-        Action<GameCommandClientOptions, IServiceProvider> gameCommandClientOptions,
-        Action<GameInterfaceFaChaiClientOptions, IServiceProvider> gameInterfaceFaChaiClientOptions,
-        Func<IServiceProvider, IDatabase> redisDatabaseResolver)
-        => services
-        .RegisterAllServiceUtilityTypes(
-            Assembly.GetExecutingAssembly(),
-            ServiceLifetime.Transient)
-        .AddGameCommandClient(gameCommandClientOptions)
-        .AddGameInterfaceFaChaiClient(gameInterfaceFaChaiClientOptions)
-        .AddGameRecordHandleClient()
-        .AddTransient<IHangfireUtensil, HangfireUtensil>()
-        .AddTransient<IHangfireLock>(sp => ActivatorUtilities.CreateInstance<HangfireLock>(sp, redisDatabaseResolver(sp)))
-        .AddSingleton<IUtensil, UtensilRepository>()
-        .AddSingleton<ISystemClock, SystemClock>();
+	public static IServiceCollection AddGameRecordCore(
+		this IServiceCollection services,
+		Action<GameCommandClientOptions, IServiceProvider> gameCommandClientOptions,
+		Action<GameInterfaceFaChaiClientOptions, IServiceProvider> gameInterfaceFaChaiClientOptions,
+		Func<IServiceProvider, IDatabase> redisDatabaseResolver)
+		=> services
+		.RegisterAllServiceUtilityTypes(
+			Assembly.GetExecutingAssembly(),
+			ServiceLifetime.Transient)
+		.AddGameCommandClient(gameCommandClientOptions)
+		.AddGameInterfaceFaChaiClient(gameInterfaceFaChaiClientOptions)
+		.AddSingleton(TimeProvider.System)
+		.AddTransient<IHangfireUtensil, HangfireUtensil>()
+		.AddTransient<IHangfireLock>(sp => ActivatorUtilities.CreateInstance<HangfireLock>(sp, redisDatabaseResolver(sp)))
+		.AddSingleton<IUtensil, UtensilRepository>();
 }

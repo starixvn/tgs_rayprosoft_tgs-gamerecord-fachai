@@ -1,8 +1,6 @@
-﻿using Tgs.GameRecord.FaChai.Core;
-
-namespace Tgs.GameRecord.FaChai;
+﻿namespace Tgs.GameRecord.FaChai;
 
 public record RedisOptions
 {
-    public string ConnectionString { get; set; } = "localhost";
+	public string ConnectionString { get; set; } = "localhost";
 }
