@@ -9,8 +9,10 @@ data:
       "Logging": {
         "LogLevel": {
           "Default": "Warning",
-          "Tgs.GameRecord.FaChai.Messages": "Information",
-          "Tgs.GameRecord.FaChai.Core.ApplicationServices.HandleRecordCommandService": "Information"
+          "Grpc.Net.Client.Balancer": "Debug",
+          "Tgs.GameRecord.FaChai.Messages.ManualMessageHandler": "Information",
+          "Tgs.GameRecord.FaChai.Messages.ScheduleMessageHandler": "Warning",
+          "Tgs.GameRecord.FaChai.Core.ApplicationServices.HandleRecordCommandService": "Warning"
         }
       },
       "GameRecord": {
