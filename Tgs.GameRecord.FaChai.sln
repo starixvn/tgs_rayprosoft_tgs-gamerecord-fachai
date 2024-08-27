@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.FaChai.Core.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameRecord.FaChai.Common", "Tgs.GameRecord.FaChai.Common\Tgs.GameRecord.FaChai.Common.csproj", "{58A47966-A4C1-4E84-90D4-5DCB5A8B0763}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameRecord.FaChai.Repositories", "Tgs.GameRecord.FaChai.Repositories\Tgs.GameRecord.FaChai.Repositories.csproj", "{4316A871-52CD-42E5-883C-80ED90719493}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{58A47966-A4C1-4E84-90D4-5DCB5A8B0763}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58A47966-A4C1-4E84-90D4-5DCB5A8B0763}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58A47966-A4C1-4E84-90D4-5DCB5A8B0763}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4316A871-52CD-42E5-883C-80ED90719493}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4316A871-52CD-42E5-883C-80ED90719493}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4316A871-52CD-42E5-883C-80ED90719493}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4316A871-52CD-42E5-883C-80ED90719493}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

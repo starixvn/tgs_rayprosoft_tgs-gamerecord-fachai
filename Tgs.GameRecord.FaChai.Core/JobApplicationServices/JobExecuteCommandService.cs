@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tgs.GameRecord.FaChai.Common;
@@ -13,18 +12,17 @@ internal class JobExecuteCommandService(
 	IOptions<GameRecordInfoOptions> options,
 	IMessageSender messageSender) : ICommandService<JobExecuteCommand>
 {
-	private readonly double _intervalMinutes = options.Value.IntervalMinutesMax < options.Value.IntervalMinutes
-		? options.Value.IntervalMinutesMax
-		: options.Value.IntervalMinutesMinimum > options.Value.IntervalMinutes
-		? options.Value.IntervalMinutesMinimum
-		: options.Value.IntervalMinutes;
+	private readonly double _intervalMinutes = Math.Clamp(
+		value: options.Value.IntervalMinutes,
+		min: options.Value.IntervalMinutesMinimum,
+		max: options.Value.IntervalMinutesMax);
 
 	public ValueTask ExecuteAsync(JobExecuteCommand command, CancellationToken cancellationToken = default)
 	{
 		var endTime = DateTimeOffset.ParseExact(DateTimeOffset.UtcNow.ToString(@"yyyy-MM-dd\THH:mm:00K"), @"yyyy-MM-dd\THH:mm:ssK", null, styles: System.Globalization.DateTimeStyles.RoundtripKind);
 		var startTime = endTime.AddMinutes(_intervalMinutes * -1);
 
-		var parameters = new FaChaiGameRecordMessage
+		var message = new FaChaiGameRecordMessage
 		{
 			ApiUrl = command.ApiUrl,
 			AgentCode = command.AgentCode,
@@ -34,11 +32,26 @@ internal class JobExecuteCommandService(
 			EndTime = endTime
 		};
 
-		logger.LogDebug("LogOn:{logOn} Parameters:{parameters}", DateTime.Now.ToString("u"), parameters);
+		logger.LogInformation("{logInformation}",
+			JsonSerializer.Serialize(new
+			{
+				LogOn = DateTime.Now.ToString("u"),
+				Subject = FaChaiNatsConst.SchedulePublish,
+				Data = new
+				{
+					message.ApiUrl,
+					message.AgentCode,
+					message.AgentKey,
+					message.Currency,
+					StartTime = message.StartTime.ToString("u"),
+					EndTime = message.EndTime.ToString("u")
+				},
+				Message = "This message publishing handler."
+			}));
 
 		return messageSender.PublishAsync(
 			subject: FaChaiNatsConst.SchedulePublish,
-			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(parameters)),
+			data: JsonSerializer.SerializeToUtf8Bytes(message),
 			cancellationToken: cancellationToken);
 	}
 }

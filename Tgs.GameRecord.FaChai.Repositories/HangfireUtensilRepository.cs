@@ -1,12 +1,13 @@
-﻿using Tgs.GameRecord.FaChai.Core.JobApplicationServices;
+﻿using Tgs.GameRecord.FaChai.Core;
+using Tgs.GameRecord.FaChai.Core.JobApplicationServices;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameRecord.FaChai.Core;
+namespace Tgs.GameRecord.FaChai.Repositories;
 
-internal class HangfireUtensil(
+internal class HangfireUtensilRepository(
 	ICommandService<JobCheckCommand> jobCheckService,
 	ICommandService<JobExecuteCommand> jobExecuteService,
-	ICommandService<JobInitCommand> jobInitservice) : IHangfireUtensil
+	ICommandService<JobInitCommand> jobInitservice) : IHangfireUtensilRepository
 {
 	public Task JobCheckAsync()
 		=> jobCheckService.ExecuteAsync(new()).AsTask();
