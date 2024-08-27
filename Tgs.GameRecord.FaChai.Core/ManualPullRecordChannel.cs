@@ -115,7 +115,7 @@ internal class ManualPullRecordChannel(
 			if (reader.TryRead(out var command))
 			{
 				using var activity = _ActivitySource.StartActivity(
-					"SchedulePullRecordChannel handle exchange",
+					"ManualPullRecordChannel handle exchange",
 					 ActivityKind.Internal,
 					parentContext: default);
 				try
