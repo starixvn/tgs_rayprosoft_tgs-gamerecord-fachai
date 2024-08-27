@@ -1,10 +1,8 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Tgs.GameRecord.FaChai.Common;
 using Tgs.GameRecord.FaChai.Core.ApplicationServices;
 using Tgs.ServiceUtility;
 using Valhalla.MessageQueue;
-using Tgs.GameRecord.FaChai.Messages;
 
 namespace Tgs.GameRecord.FaChai.Messages;
 
@@ -14,8 +12,7 @@ internal class ManualMessageHandler(
 {
 	public ValueTask HandleAsync(string subject, ReadOnlyMemory<byte> data, IEnumerable<MessageHeaderValue>? headerValues, CancellationToken cancellationToken = default)
 	{
-		var json = Encoding.UTF8.GetString(data.Span);
-		var message = JsonSerializer.Deserialize<FaChaiGameRecordMessage>(json)
+		var message = JsonSerializer.Deserialize<FaChaiGameRecordMessage>(data.Span)
 			?? throw new NullReferenceException("The request data resolves to a null value");
 
 		logger.LogInformation("LogOn:{logOn} Subject:{subject} Information Request:{message}",
